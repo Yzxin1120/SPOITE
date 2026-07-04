@@ -1,0 +1,90 @@
+{
+  "provenance": {
+    "status": "approved",
+    "source": "assistant-filled",
+    "approved_by_user": "2026-07-04",
+    "design_version": "FROZEN BASELINE v1.0"
+  },
+  "synthetic": {
+    "p": 10,
+    "ar_rho": 0.5,
+    "alpha_raw": [1.0, 1.0, -1.0, 0.5],
+    "noise_sd": 1.0,
+    "true_propensity_clip": null,
+    "rare_mixture_probability": 0.05,
+    "rare_mixture_shift": 4.0,
+    "n_train": 800,
+    "n_validation": 400,
+    "n_test": 800
+  },
+  "nuisance": {
+    "folds": 5,
+    "outcome_model": "ridge",
+    "propensity_model": "logistic",
+    "ridge_alpha": 1.0,
+    "estimated_propensity_numerical_guard": 1e-6
+  },
+  "features": {
+    "basis": "intercept_X_X_squared_X3_times_X4",
+    "standardize": true
+  },
+  "decision": {
+    "m": 16,
+    "group_rule": "within_batch_X1_median",
+    "lower": 0,
+    "upper_rule": "ceil_0.75_times_budget",
+    "cost_distribution": "uniform",
+    "cost_low": 0.3,
+    "cost_high": 1.2,
+    "budget_rounding": "floor_fraction_times_m_plus_0.5"
+  },
+  "training": {
+    "l2_grid": [0.0001, 0.001, 0.01],
+    "learning_rate_grid": [0.05, 0.1, 0.2],
+    "epochs": 60,
+    "dc_boundary_penalty_grid": [0.03, 0.1, 0.3],
+    "dc_band_quantile_grid": [0.05, 0.1, 0.2],
+    "dc_outer_rounds": 4
+  },
+  "inference": {
+    "pipeline_bootstrap_replicates": 100,
+    "paired_seed_bootstrap_replicates": 10000,
+    "confidence_level": 0.95
+  },
+  "experiment_1": {
+    "seeds": {"start": 0, "stop_inclusive": 49},
+    "cate_regimes": ["near_linear", "nonlinear"],
+    "gamma_e": 2.0,
+    "budget_fraction": 0.3
+  },
+  "experiment_2": {
+    "a": [4, 16, 64],
+    "monte_carlo_replicates": 100000,
+    "radius": 1.0
+  },
+  "experiment_3": {
+    "seeds": {"start": 0, "stop_inclusive": 49},
+    "gamma_e": [0.5, 2.0, 4.0],
+    "tails": ["gaussian", "rare_mixture"],
+    "budget_fraction": [0.15, 0.3, 0.45],
+    "fragility_seeds": {"start": 0, "stop_inclusive": 49}
+  },
+  "experiment_4": {
+    "ihdp_realizations": {"start": 0, "stop_inclusive": 99},
+    "ihdp_validation_fraction_of_train": 0.2,
+    "acic_settings": "all_available_4",
+    "acic_replicates": "all_available_5",
+    "acic_split": [0.6, 0.2, 0.2],
+    "twins_temperatures": [0.5, 1.0, 2.0],
+    "twins_assignment_seeds": {"start": 0, "stop_inclusive": 19},
+    "twins_subsample": 5000,
+    "twins_split": [0.6, 0.2, 0.2]
+  },
+  "appendix_clipping": {
+    "epsilon": [0.01, 0.025, 0.05],
+    "gamma_e": 4.0,
+    "tail": "rare_mixture",
+    "budget_fraction": [0.15, 0.45],
+    "seeds": {"start": 0, "stop_inclusive": 49}
+  }
+}

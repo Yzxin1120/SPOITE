@@ -1,0 +1,17 @@
+.DS_Store
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+build/
+dist/
+*.egg-info/
+
+outputs/smoke/*
+outputs/provisional/*
+outputs/intermediate/*
+outputs/stale/*
+
+!outputs/smoke/.gitkeep
+!outputs/provisional/.gitkeep
+!outputs/intermediate/.gitkeep
