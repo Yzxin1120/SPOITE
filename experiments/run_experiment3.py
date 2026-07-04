@@ -11,6 +11,7 @@ import pandas as pd
 
 from spoite.config import load_config
 from run_experiment1 import run_one
+from spoite.provenance import validate_result_rows
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -53,6 +54,7 @@ def main():
                         experiment="experiment_3",
                         report_methods=("CPO+", "DC-CPO(band)"),
                     ))
+                    validate_result_rows(rows)
                     pd.DataFrame(rows).to_csv(args.output, index=False)
     print(f"wrote {len(rows)} rows to {args.output}")
 

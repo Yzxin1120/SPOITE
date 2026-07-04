@@ -47,6 +47,8 @@ def exact_dfi(
     radius: float = 1.0,
 ) -> tuple[float, float]:
     """Definition 5.1 over every feasible competitor with positive margin."""
+    if bootstrap_tau.shape[0] < 2:
+        raise ValueError("exact DFI covariance requires at least two bootstrap replicates")
     values: list[float] = []
     coverage: list[float] = []
     for idx in batches:

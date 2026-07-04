@@ -4,12 +4,14 @@
 from __future__ import annotations
 
 import argparse
+import time
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
-from spoite.config import load_config
+from spoite.config import current_git_commit, load_config
+from spoite.provenance import validate_result_rows
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -30,11 +32,22 @@ def main():
             ("Sigma_1", np.diag([1 / a, a])),
             ("Sigma_2", np.diag([a, 1 / a])),
         ):
+            started = time.perf_counter()
             draw = rng.multivariate_normal([1.0, 0.0], covariance, size=reps)
             crossing = draw[:, 0] < 0  # choose v=(-1,0) instead of w0=(0,0)
             rows.append({
                 "experiment": "experiment_2",
                 "config_id": cfg["_config_sha256"][:12],
+                "git_commit": current_git_commit(ROOT),
+                "dataset": "appendix_A4_geometry",
+                "regime": orientation,
+                "seed": 82026,
+                "split_id": "not_applicable",
+                "nuisance": "not_applicable",
+                "method_config": "analytic_geometry",
+                "method": "exact_geometry",
+                "decision_config": "S=conv{(0,0),(-1,0)};b0=(1,0)",
+                "metric_config": "exact_DFI_radius_1;Monte_Carlo",
                 "a": a,
                 "orientation": orientation,
                 "determinant": float(np.linalg.det(covariance)),
@@ -43,8 +56,10 @@ def main():
                 "mc_crossing_frequency": float(crossing.mean()),
                 "mc_regret": float(crossing.mean()),
                 "mc_replicates": reps,
+                "runtime_seconds_scenario": time.perf_counter() - started,
                 "failure_status": "ok",
             })
+    validate_result_rows(rows)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     pd.DataFrame(rows).to_csv(args.output, index=False)
 

@@ -12,13 +12,14 @@ import numpy as np
 import pandas as pd
 
 from spoite.causal import NuisanceConfig, crossfit_dr
-from spoite.config import load_config
+from spoite.config import current_git_commit, load_config
 from spoite.data import (
     acic_outcome_files, load_acic_split, load_ihdp_split, load_twins_split,
 )
 from spoite.evaluation import decision_metrics, exact_dfi, pehe
 from spoite.methods import QuadraticFeaturizer, make_instances
 from spoite.pipeline import fit_selected, prepare, tune
+from spoite.provenance import validate_result_rows
 from run_experiment1 import _bootstrap_predictions, _combine
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -80,8 +81,10 @@ def evaluate(cfg, train, val, test, scenario: str, seed: int, n_boot: int):
         rows.append({
             "experiment": "experiment_4",
             "config_id": cfg["_config_sha256"][:12],
+            "git_commit": current_git_commit(ROOT),
             "dataset": test.metadata.get("outcome_file", scenario.split(":")[0]),
             "scenario": scenario,
+            "regime": scenario,
             "seed": seed,
             "split_id": test.dataset_id,
             "method": method,
@@ -91,7 +94,18 @@ def evaluate(cfg, train, val, test, scenario: str, seed: int, n_boot: int):
             "dfi_competitor_coverage": coverage,
             "nuisance": json.dumps(nuisance.__dict__, sort_keys=True),
             "method_config": json.dumps(selected.get(method, {"oracle": True}), sort_keys=True),
+            "decision_config": json.dumps({
+                "m": d["m"], "budget_fraction": 0.30,
+                "groups": "within_batch_X1_median",
+                "cost": [d["cost_low"], d["cost_high"]],
+            }, sort_keys=True),
             "bootstrap_replicates": n_boot,
+            "metric_config": json.dumps({
+                "dfi": "exact_all_positive_margin_competitors",
+                "dfi_radius": 1.0,
+                "pipeline_bootstrap_replicates": n_boot,
+                "pehe": "root_mean_squared_cate_error",
+            }, sort_keys=True),
             "estimated_e_min": float(diag["e"].min()),
             "estimated_e_max": float(diag["e"].max()),
             "runtime_seconds_scenario": time.perf_counter() - start,
@@ -135,6 +149,7 @@ def main():
     for scenario, seed, loader in jobs:
         print(f"experiment_4 {scenario} bootstrap={n_boot}", flush=True)
         rows.extend(evaluate(cfg, *loader(), scenario, seed, n_boot))
+        validate_result_rows(rows)
         pd.DataFrame(rows).to_csv(args.output, index=False)
     print(f"wrote {len(rows)} rows to {args.output}")
 

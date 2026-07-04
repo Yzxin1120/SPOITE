@@ -2,7 +2,7 @@ import numpy as np
 
 from spoite.causal import NuisanceConfig, crossfit_dr
 from spoite.data import SyntheticConfig, generate_synthetic
-from spoite.evaluation import decision_metrics, pehe
+from spoite.evaluation import decision_metrics, exact_dfi, pehe
 from spoite.methods import QuadraticFeaturizer, fit_cpo, fit_mae, fit_mse, make_instances
 from spoite.optimization import AllocationOracle, enumerate_vertices, make_problem
 
@@ -32,3 +32,14 @@ def test_all_shared_learners_complete_smoke_run():
         assert np.isfinite(pehe(pred, d.tau_true))
         out = decision_metrics(pred, d.tau_true, cost, inst.batches, oracle)
         assert all(np.isfinite(v) for v in out.values())
+
+
+def test_dfi_rejects_one_bootstrap_replicate():
+    problem = make_problem(16, 0.30)
+    oracle = AllocationOracle(problem)
+    vertices = enumerate_vertices(problem)
+    with np.testing.assert_raises(ValueError):
+        exact_dfi(
+            np.zeros((1, 16)), np.zeros(16), np.zeros(16),
+            np.arange(16)[None, :], oracle, vertices,
+        )

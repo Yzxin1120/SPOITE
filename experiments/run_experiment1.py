@@ -6,7 +6,6 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import subprocess
 import time
 from pathlib import Path
 
@@ -14,24 +13,15 @@ import numpy as np
 import pandas as pd
 
 from spoite.causal import NuisanceConfig, crossfit_dr
-from spoite.config import load_config
+from spoite.config import current_git_commit, load_config
 from spoite.data import DatasetBundle, SyntheticConfig, generate_synthetic
 from spoite.evaluation import decision_metrics, exact_dfi, pehe
 from spoite.methods import QuadraticFeaturizer, make_instances
 from spoite.pipeline import fit_selected, prepare, tune
+from spoite.provenance import validate_result_rows
 
 
 ROOT = Path(__file__).resolve().parents[1]
-
-
-def _git_commit() -> str:
-    try:
-        return subprocess.check_output(
-            ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True,
-            stderr=subprocess.DEVNULL,
-        ).strip()
-    except (subprocess.CalledProcessError, FileNotFoundError):
-        return "unavailable-no-project-git-repository"
 
 
 def _combine(a: DatasetBundle, b: DatasetBundle) -> DatasetBundle:
@@ -181,7 +171,7 @@ def run_one(
         rows.append({
             "experiment": experiment,
             "config_id": cfg["_config_sha256"][:12],
-            "git_commit": _git_commit(),
+            "git_commit": current_git_commit(ROOT),
             "dataset": "synthetic",
             "regime": regime,
             "gamma_e": scfg.gamma_e,
@@ -203,6 +193,12 @@ def run_one(
                 "cost": [d["cost_low"], d["cost_high"]],
             }, sort_keys=True),
             "bootstrap_replicates": n_boot,
+            "metric_config": json.dumps({
+                "dfi": "exact_all_positive_margin_competitors",
+                "dfi_radius": 1.0,
+                "pipeline_bootstrap_replicates": n_boot,
+                "pehe": "root_mean_squared_cate_error",
+            }, sort_keys=True),
             "estimated_e_min": float(nuis_diag["e"].min()),
             "estimated_e_max": float(nuis_diag["e"].max()),
             "runtime_seconds_scenario": elapsed,
@@ -234,6 +230,7 @@ def main():
         for seed in range(start, stop + 1):
             print(f"experiment_1 regime={regime} seed={seed} bootstrap={n_boot}", flush=True)
             rows.extend(run_one(cfg, regime, seed, n_boot))
+            validate_result_rows(rows)
             pd.DataFrame(rows).to_csv(output, index=False)
     print(f"wrote {len(rows)} rows to {output}")
 
