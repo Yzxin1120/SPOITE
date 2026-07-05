@@ -1,0 +1,13 @@
+regime,method_a,method_b,ranking_reversal_rate
+near_linear,MAE-DR,MSE-DR,0.02
+near_linear,CPO+,MSE-DR,0.1
+near_linear,CPO+,MAE-DR,0.18
+near_linear,CPO+,DC-CPO(band),0.28
+near_linear,DC-CPO(band),MSE-DR,0.16
+near_linear,DC-CPO(band),MAE-DR,0.24
+nonlinear,MAE-DR,MSE-DR,0.04
+nonlinear,CPO+,MSE-DR,0.14
+nonlinear,CPO+,MAE-DR,0.32
+nonlinear,CPO+,DC-CPO(band),0.34
+nonlinear,DC-CPO(band),MSE-DR,0.1
+nonlinear,DC-CPO(band),MAE-DR,0.38

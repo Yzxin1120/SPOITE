@@ -1,0 +1,35 @@
+{
+  ".gitkeep": {
+    "bytes": 44
+  },
+  "MANIFEST.json": {
+    "bytes": 451
+  },
+  "experiment_1_paired_contrasts.csv": {
+    "bytes": 1080
+  },
+  "experiment_1_pehe_regret.png": {
+    "bytes": 117019
+  },
+  "experiment_1_ranking_reversals.csv": {
+    "bytes": 429
+  },
+  "experiment_1_rows.csv": {
+    "bytes": 353930
+  },
+  "experiment_1_summary.csv": {
+    "bytes": 2796
+  },
+  "experiment_2_geometry.csv": {
+    "bytes": 2046
+  },
+  "experiment_2_geometry.png": {
+    "bytes": 59162
+  },
+  "experiment_3_rows.csv": {
+    "bytes": 1326222
+  },
+  "experiment_3_summary.csv": {
+    "bytes": 9789
+  }
+}
