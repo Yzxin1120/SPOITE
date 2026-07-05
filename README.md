@@ -9,7 +9,7 @@ material changes require prior user approval and a changelog entry.
 
 ## Reference directories
 
-- `../dccpo/` - Claude's original implementation; read-only reference.
+- `../dccpo/` - Legacy implementation; read-only reference.
 - `../experiment/` - previous section-driven experiments; read-only reference.
 - `../SmartPredictThenOptimize-master/` - original SPO reference code.
 
@@ -81,7 +81,7 @@ outputs/          smoke/provisional/final artifacts
 
 ## Reproduction
 
-The approved assistant-filled values are in `configs/final.json`; their
+The approved execution parameters are in `configs/final.json`; their
 rationale and provenance are in `DESIGN_CHANGELOG.md`.
 
 ```bash

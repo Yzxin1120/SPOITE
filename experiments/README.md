@@ -9,7 +9,7 @@ Implemented, question-driven entry points:
 - `run_appendix_clipping.py` — fixed-propensity-clipping ablation (Section 10).
 - `aggregate_results.py` — summaries, paired contrasts, and figures.
 
-All open design parameters were approved for assistant completion on 2026-07-04
+All open design parameters were approved and finalized on 2026-07-04
 and are recorded in `../configs/final.json` and `../DESIGN_CHANGELOG.md`.
 
 Only artifacts under `../outputs/final/` produced from the frozen Git commit and

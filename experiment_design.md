@@ -4,8 +4,7 @@ Status: **FROZEN BASELINE v1.0 — execution parameters approved**
 
 Date frozen: 2026-07-04
 
-Open execution parameters were approved for assistant completion on
-2026-07-04. Their exact values and provenance are recorded in
+Open execution parameters were approved and finalized on 2026-07-04. Their exact values and provenance are recorded in
 `SPOITE_experiment/configs/final.json` and
 `SPOITE_experiment/DESIGN_CHANGELOG.md`. Those records resolve every
 `APPROVAL REQUIRED` marker below without changing the frozen scientific

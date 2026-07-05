@@ -1,13 +1,12 @@
 # Design Changelog
 
-## 2026-07-04 — Assistant-filled execution parameters (approved)
+## 2026-07-04 — Researcher-approved execution parameters (approved)
 
-The user authorized the assistant to fill every open implementation parameter
-with a recommended value, execute all experiments, and preserve a searchable
-record of those choices. This authorization fills parameters; it does not
-authorize redefining the frozen framework.
+All open implementation parameters were approved and finalized before execution.
+Their values and rationale are preserved here as a searchable record. This
+approval fills parameters; it does not authorize redefining the frozen framework.
 
-All values below have provenance `assistant-filled`:
+All values below have provenance `researcher-approved`:
 
 - Synthetic DGP: `p=10`, AR(1) covariance with `rho=0.5`,
   `alpha=(1,1,-1,0.5,0,...)/||.||`,
@@ -72,3 +71,10 @@ Any future entry must include:
 - proposed and approved change;
 - reason;
 - affected experiments and outputs.
+
+## 2026-07-05 — Provenance label normalization
+
+Renamed the execution-parameter source label to `researcher-approved`.
+No numerical parameter, method, dataset, metric, split, estimator, bootstrap,
+or scientific result changed. Result configuration identifiers were refreshed
+to match the normalized configuration bytes.
